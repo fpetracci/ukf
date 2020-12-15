@@ -1,4 +1,4 @@
-function x_new = state_update(x_old)
+function x_new = state_update(x_old,u)
 % State update function. 
 % Change states update definition to represent your own state function:
 % x_dot = f(x) 

@@ -1,4 +1,4 @@
-function meas = state2meas(x)
+function meas = state2meas(x,u)
 % given state vector, it outputs its virtual measurements vector.
 % Change outputs function definition to represent your own function:
 % y = h(x) 

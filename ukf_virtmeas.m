@@ -1,4 +1,4 @@
-function [y_virt, S_virt, C] = ukf_virtmeas(x, P)
+function [y_virt, S_virt, C] = ukf_virtmeas(x, P, u)
  % ukf_virtmeas generates 2n+1 sigma points, it propagates them using
  % state2meas and outputs the mean and the covariance of the new sigma 
  % points distribution and the crosscorelation between state and virtual 
@@ -7,6 +7,7 @@ function [y_virt, S_virt, C] = ukf_virtmeas(x, P)
  % Input		
  % x			state vector nx1
  % P			state covariance matrix nxn
+ % u			input vector px1
  %
  % Output
  % y_virt		virtual measurements vector mx1
@@ -17,7 +18,7 @@ function [y_virt, S_virt, C] = ukf_virtmeas(x, P)
 [sp, wm, wc] = sigmapoint_gen(x, P);
 
 % propagation of state vector using state2meas
-[~, y_virt, esse, C] = spstate2meas(sp, x, wm, wc);
+[~, y_virt, esse, C] = spstate2meas(sp, x, wm, wc, u);
 
 % forced simmetry							
 S_virt = (esse + esse')/2;
@@ -71,7 +72,7 @@ end
 
 %--------------------------------------------------------------------------
 %--------------------------------------------------------------------------
-function [sp_meas_new, y_virt, S_new, C] = spstate2meas(sp, x, wm, wc)
+function [sp_meas_new, y_virt, S_new, C] = spstate2meas(sp, x, wm, wc, u)
 % this function propagates sigmapoint using state2meas and then computes
 % mean, covariance matrix and crosscorelation matrix
 	
@@ -79,12 +80,12 @@ function [sp_meas_new, y_virt, S_new, C] = spstate2meas(sp, x, wm, wc)
 	nsp = 2*n + 1;		% number of sigma points
 	
 	% init sigma points propagated
-	n_meas = size(state2meas(x),1);
+	n_meas = size(state2meas(x, u),1);
 	sp_meas_new = zeros(n_meas, nsp);
 	
 	% propagation through meas function
 	for j = 1:nsp
-		sp_meas_new(:,j) = state2meas(sp(:,j));
+		sp_meas_new(:,j) = state2meas(sp(:,j),u);
 	end
 	
 	% virt meas mean

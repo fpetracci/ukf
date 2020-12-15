@@ -1,4 +1,4 @@
-function [x_new, P_new] = ukf_predict(x_old, P_old)
+function [x_new, P_new] = ukf_predict(x_old, P_old, u)
  % ukf_predict generates 2n+1 sigma points, it propagates them using
  % state_update and outputs the mean and the covariance of the new sigma 
  % points distribution. 
@@ -6,6 +6,7 @@ function [x_new, P_new] = ukf_predict(x_old, P_old)
  % Input		
  % x_old		old state vector nx1
  % P_old		old state covariance matrix nxn
+ % u			input vector px1
  %
  % Output
  % x_new		new state vector nx1
@@ -15,7 +16,7 @@ function [x_new, P_new] = ukf_predict(x_old, P_old)
 [sp, wm, wc] = sigmapoint_gen(x_old, P_old);
 
 %propagation using state update function
-[x_new, P] = sigmapoint_propagate(sp, wm, wc);
+[x_new, P] = sigmapoint_propagate(sp, wm, wc, u);
 
 % forced simmetry
 P_new = (P + P')/2;
@@ -68,7 +69,7 @@ end
 
 %--------------------------------------------------------------------------
 %--------------------------------------------------------------------------
-function [x_new, P_new] = sigmapoint_propagate(sp, wm, wc)
+function [x_new, P_new] = sigmapoint_propagate(sp, wm, wc, u)
 % this function, using state_update, propagates the sp distribution
 	
 	n = size(sp(:,1),1);	% state dimension
@@ -79,7 +80,7 @@ function [x_new, P_new] = sigmapoint_propagate(sp, wm, wc)
 	
 	% propagation
 	for j = 1:nsp
-		 sp_new(:,j) = state_update(sp(:,j));
+		 sp_new(:,j) = state_update(sp(:,j), u);
 	end
 	
 	%%ANGLE in state
