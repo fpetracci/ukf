@@ -7,8 +7,8 @@ animation_mode = 0; % put = 1 if you want an animation of the system in action
 % m xdd + b xd + k x = F
 % y = x
 m = 1;		% mass [kg]
-k = 10;	% spring coeff [N/m]
-b = 4;		% damper coeff [Ns/m]
+k = 10;		% spring coeff [N/m]
+b = 5;		% damper coeff [Ns/m]
 F = 100;	% external force [N]
 
 
